@@ -31,7 +31,6 @@ def gstreamer_pipeline(
 
 
 def process(frame, rect_number):
-    # global start_point, end_point
     rect_size = 100
     h_sensitivity = 20
     s_h = 255
@@ -39,7 +38,7 @@ def process(frame, rect_number):
     s_l = 50
     v_l = 50
     width, height, channels = frame.shape
-    # choose rectangle's points by rect_number
+    # Choose rectangle's points by rect_number
     if rect_number == 1:
         start_point = (int(height / 6 - rect_size / 2), int(width / 6 - rect_size / 2))
         end_point = (int(height / 6 + rect_size / 2), int(width / 6 + rect_size / 2))
@@ -50,14 +49,14 @@ def process(frame, rect_number):
         start_point = (int(height / 6 * 5 - rect_size / 2), int(width / 6 * 5 - rect_size / 2))
         end_point = (int(height / 6 * 5 + rect_size / 2), int(width / 6 * 5 + rect_size / 2))
 
-    # drawing rect
+    # Drawing rect
     color = (255, 255, 255)
     thickness = 2
     rect = cv2.rectangle(frame, start_point, end_point, color, thickness)
 
-    # initializing array of colors' borders
+    # Initializing array of colors' borders
     list_of_masks = [
-        (np.array([0 + h_sensitivity, s_h, v_h]), np.array([0 - h_sensitivity, s_l, v_l]), "red"),
+        (np.array([175 + h_sensitivity, s_h, v_h]), np.array([175 - h_sensitivity, s_l, v_l]), "red"),
         (np.array([20 + h_sensitivity, s_h, v_h]), np.array([20 - h_sensitivity, s_l, v_l]), "orange"),
         (np.array([30 + h_sensitivity, s_h, v_h]), np.array([30 - h_sensitivity, s_l, v_l]), "yellow"),
         (np.array([60 + h_sensitivity, s_h, v_h]), np.array([60 - h_sensitivity, s_l, v_l]), "green"),
@@ -71,7 +70,7 @@ def process(frame, rect_number):
     hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     mask_frame = hsv_frame[start_point[1]:end_point[1] + 1, start_point[0]:end_point[0] + 1]
 
-    # finding the most similar color
+    # Finding the most similar color
     for borders in list_of_masks:
         mask = cv2.inRange(mask_frame, borders[1], borders[0])
         rate = np.count_nonzero(mask) / (rect_size * rect_size)
@@ -79,7 +78,7 @@ def process(frame, rect_number):
             inside_text = borders[2]
             global_rate = rate
 
-    # tune & draw text
+    # Tune & draw text
     org = (end_point[0] - 100, end_point[1] + 20)
     font = cv2.FONT_HERSHEY_SIMPLEX
     font_scale = 0.7
@@ -106,7 +105,8 @@ while cap.isOpened():
     # Flip Video vertically (180 Degrees)
     frame_for_render = cv2.flip(frame_for_render, 180)
 
-    invert = process(frame_for_render, rectangle_number)
+    # do all magic here
+    process(frame_for_render, rectangle_number)
 
     # Show video
     cv2.imshow('Cam', frame_for_render)
@@ -117,6 +117,7 @@ while cap.isOpened():
         # Quit
         print('Good Bye!')
         break
+    # Choosing number of rectangle
     elif k == 51:
         rectangle_number = 3
     elif k == 50:
