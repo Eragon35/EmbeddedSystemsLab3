@@ -33,10 +33,8 @@ def gstreamer_pipeline(
 def process(frame, rect_number):
     rect_size = 100
     h_sensitivity = 20
-    s_h = 255
-    v_h = 255
-    s_l = 50
-    v_l = 50
+    high = 255
+    low = 50
     width, height, channels = frame.shape
     # Choose rectangle's points by rect_number
     if rect_number == 1:
@@ -50,19 +48,19 @@ def process(frame, rect_number):
         end_point = (int(height / 6 * 5 + rect_size / 2), int(width / 6 * 5 + rect_size / 2))
 
     # Drawing rect
-    color = (255, 255, 255)
+    color = (150, 150, 150)
     thickness = 2
     rect = cv2.rectangle(frame, start_point, end_point, color, thickness)
 
     # Initializing array of colors' borders
     list_of_masks = [
-        (np.array([175 + h_sensitivity, s_h, v_h]), np.array([175 - h_sensitivity, s_l, v_l]), "red"),
-        (np.array([20 + h_sensitivity, s_h, v_h]), np.array([20 - h_sensitivity, s_l, v_l]), "orange"),
-        (np.array([30 + h_sensitivity, s_h, v_h]), np.array([30 - h_sensitivity, s_l, v_l]), "yellow"),
-        (np.array([60 + h_sensitivity, s_h, v_h]), np.array([60 - h_sensitivity, s_l, v_l]), "green"),
-        (np.array([90 + h_sensitivity, s_h, v_h]), np.array([90 - h_sensitivity, s_l, v_l]), "cyan"),
-        (np.array([120 + h_sensitivity, s_h, v_h]), np.array([120 - h_sensitivity, s_l, v_l]), "blue"),
-        (np.array([155 + h_sensitivity, s_h, v_h]), np.array([155 - h_sensitivity, s_l, v_l]), "purple")
+        (np.array([175 + h_sensitivity, high, high]), np.array([175 - h_sensitivity, low, low]), "red"),
+        (np.array([20 + h_sensitivity, high, high]), np.array([20 - h_sensitivity, low, low]), "orange"),
+        (np.array([30 + h_sensitivity, high, high]), np.array([30 - h_sensitivity, low, low]), "yellow"),
+        (np.array([90 + h_sensitivity, high, high]), np.array([90 - h_sensitivity, low, low]), "cyan"),
+        (np.array([60 + h_sensitivity, high, high]), np.array([60 - h_sensitivity, low, low]), "green"),
+        (np.array([120 + h_sensitivity, high, high]), np.array([120 - h_sensitivity, low, low]), "blue"),
+        (np.array([155 + h_sensitivity, high, high]), np.array([155 - h_sensitivity, low, low]), "violet")
     ]
     global_rate = 0.0
     inside_text = 'not rainbow color'
